@@ -5,16 +5,21 @@ printUsage() {
   echo "Usage: $0 [output1.txt] [output2.txt] ..."
 }
 
+stripPath() { # FIXME: Doesn't Work
+  noExt=${1%.*}
+  noPath=${noExt##*/}
+  return $noPath
+}
+
 # Uses the file $1 to creat folder, splits$1, which contains the split files
 splitSingleFile() {
-  #outputFile='output.txt'
-  #splitFolder='splits'
   outputFile=$1
   splitFolder="splits$1"
+#  splitFolder=`stripPath $1` # fixme: should be split+pathlessnamewithnoextension
 
   # Ensure the file exists
   if [[ ! -f $outputFile ]]; then
-    echo "$outputFile not found." >&2
+    echo "\"$outputFile\" not found." >&2
     exit 1
   fi
 
@@ -33,17 +38,20 @@ splitSingleFile() {
     mv $f "`printf '%02d' $i` $studUsername"
     let "i += 1"
   done
+
+  cd ..
 }
 
 main() {
 # Ensure at least one argument is given
   [[ $# -gt 0 ]] || { printUsage; exit 1; }
-#if [ -z "$1" ]; then
-#  printUsage
-#fi
 
-# use $1 then go shift and repeat until $1 is empty
-  splitSingleFile $@
+  # For each paramater
+  while [[ $# -gt 0 ]]; do
+    # Split the file
+    splitSingleFile $1
+    shift
+  done
 }
 
 main "$@"
