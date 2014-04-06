@@ -16,11 +16,11 @@ if ! (mkdir $splitFolder && cp $outputFile $splitFolder/$outputFile); then
 fi
 
 cd $splitFolder/
-split -p "final/main.cPage 1$" $outputFile
+split -p "final/main.c Page 1$" $outputFile
 
 i=1
 for f in x*; do
-  studUsername=`head -n 1 $f | sed 's|.*/\(.*\)/final/main.cPage 1$|\1|'`
+  studUsername=`head -n 1 $f | sed 's|.*/\(.*\)/final/main.c Page 1$|\1|'`
   mv $f "`printf '%02d' $i` $studUsername"
   let "i += 1"
 done
