@@ -1,11 +1,46 @@
 #!/bin/bash
 
 printUsage() {
-  echo "Usage: $0 [output1.txt] [output2.txt] ..."
+#  echo "Usage: $0 [output1.txt] [output2.txt] ..."
+
+  cat << EOF
+Usage: $0 [-h] [-e extension] [-s splitRegex] output1.txt [output2.txt] ...
+
+This script splits marking files into a new folder based on a regex pattern. It will create a new folder which has the name of the file (without the extension). Inside this folder will be many files named with the names of the students and prefixed with a number.
+
+OPTIONS:
+   -h      Show this message
+   -e      Desired extension for the split files. Default is ".c"
+   -s      Regex used as argument for csplits. Note it must be surrounded by "/"s. Default is "/final/main.c Page 1$/"
+EOF
 }
 
 EXTENSION='.c'
 SPLIT_REGEX='/final/main.c Page 1$/'
+while getopts "he:s:" OPTION
+do
+     case $OPTION in
+         h)
+             printUsage
+             exit 1
+             ;;
+         e)
+             EXTENSION=$OPTARG
+             ;;
+         s)
+             SPLIT_REGEX=$OPTARG
+             ;;
+         ?)
+             printUsage
+             exit
+             ;;
+     esac
+done
+shift $((OPTIND-1))
+
+# Ensure at least one argument is given
+[[ $# -gt 0 ]] || { printUsage; exit 1; }
+
 
 # Removes the path and extension of the parameter
 stripPath() {
@@ -48,9 +83,6 @@ splitSingleFile() {
 }
 
 main() {
-  # Ensure at least one argument is given
-  [[ $# -gt 0 ]] || { printUsage; exit 1; }
-
   # For each paramater
   while [[ $# -gt 0 ]]; do
     # Split the file
