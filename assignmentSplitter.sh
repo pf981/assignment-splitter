@@ -4,6 +4,9 @@ printUsage() {
   echo "Usage: $0 [output1.txt] [output2.txt] ..."
 }
 
+EXTENSION='.c'
+SPLIT_REGEX='/final/main.c Page 1$/'
+
 # Removes the path and extension of the parameter
 stripPath() {
   # Remove path
@@ -37,7 +40,7 @@ splitSingleFile() {
   i=1
   for f in x*; do
     studUsername=`head -n 1 $f | sed 's|.*/\(.*\)/final/main.c Page 1$|\1|'`
-    mv $f "`printf '%02d' $i` $studUsername"
+    mv $f "`printf '%02d' $i` ${studUsername}${EXTENSION}"
     let "i += 1"
   done
 
