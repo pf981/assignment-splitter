@@ -31,7 +31,8 @@ splitSingleFile() {
   fi
 
   cd $splitFolder/
-  split -p "final/main.c Page 1$" $outputFile # FIXME: Use csplit as split -p is Mac specific
+#  split -p "final/main.c Page 1$" $outputFile # FIXME: Use csplit as split -p is Mac specific
+  csplit -k AssignmentResult_CL01.txt '/final/main.c Page 1$/' {99} > /dev/null 2>&1
 
   i=1
   for f in x*; do
