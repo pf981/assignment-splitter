@@ -1,21 +1,22 @@
 #!/bin/bash
-# FIXME: TODO: Make it run with $ assignmentSplitter CL01.txt CL02.txt CL04.txt    and it gives folders splitCL01 splitCL02 splitCL03
 
 printUsage() {
   echo "Usage: $0 [output1.txt] [output2.txt] ..."
 }
 
-stripPath() { # FIXME: Doesn't Work
-  noExt=${1%.*}
-  noPath=${noExt##*/}
-  return $noPath
+# Removes the path and extension of the parameter
+stripPath() {
+  # Remove path
+  noExt=${1##*/}
+
+  # Remove the extension
+  echo ${noExt%.*}
 }
 
 # Uses the file $1 to creat folder, splits$1, which contains the split files
 splitSingleFile() {
   outputFile=$1
-  splitFolder="splits$1"
-#  splitFolder=`stripPath $1` # fixme: should be split+pathlessnamewithnoextension
+  splitFolder=`stripPath $1` # If the file is "a/b/output.txt" the folder will be "output"
 
   # Ensure the file exists
   if [[ ! -f $outputFile ]]; then
@@ -30,7 +31,7 @@ splitSingleFile() {
   fi
 
   cd $splitFolder/
-  split -p "final/main.c Page 1$" $outputFile
+  split -p "final/main.c Page 1$" $outputFile # FIXME: Use csplit as split -p is Mac specific
 
   i=1
   for f in x*; do
@@ -43,13 +44,13 @@ splitSingleFile() {
 }
 
 main() {
-# Ensure at least one argument is given
+  # Ensure at least one argument is given
   [[ $# -gt 0 ]] || { printUsage; exit 1; }
 
   # For each paramater
   while [[ $# -gt 0 ]]; do
     # Split the file
-    splitSingleFile $1
+    splitSingleFile "$1"
     shift
   done
 }
