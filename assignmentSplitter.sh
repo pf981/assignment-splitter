@@ -11,12 +11,13 @@ This script splits marking files into a new folder based on a regex pattern. It 
 OPTIONS:
    -h      Show this message
    -e      Desired extension for the split files. Default is ".c"
-   -s      Regex used as argument for csplits. Note it must be surrounded by "/"s. Default is "/final/main.c Page 1$/"
+   -s      Regex used as argument for csplits. Note it must be surrounded by "/"s. Default is "/final/main.c Page 1[^0-9]/". Note that there is a bug on OS X that makes the "$" regex character not work.
 EOF
 }
 
 EXTENSION='.c'
-SPLIT_REGEX='/final/main.c Page 1$/'
+#SPLIT_REGEX='/final/main.c Page 1$/' # FIXME: Note that there is a bug on OS X that makes the "$" regex character not work.
+SPLIT_REGEX='/final/main.c Page 1[^0-9]/' # Using [^0-9] rather than $ to negate OS X bug in csplits
 while getopts "he:s:" OPTION
 do
      case $OPTION in
